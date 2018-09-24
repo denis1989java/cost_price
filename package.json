@@ -1,0 +1,20 @@
+{
+  "name": "cost_price",
+  "version": "1.0.0",
+  "description": "Cost price calculating",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/denis1989java/cost_price",
+  "keywords": [
+    "Cost",
+    "price",
+    "calculating"
+  ],
+  "author": "Dzianis Monich",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "2.0.0"
+  }
+}
