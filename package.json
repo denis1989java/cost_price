@@ -15,6 +15,11 @@
   "author": "Dzianis Monich",
   "license": "UNLICENSED",
   "devDependencies": {
-    "electron": "2.0.0"
+    "electron": "3.0.0",
+    "react": "16.5.2",
+    "react-dom": "16.5.2"
+  },
+  "dependencies": {
+    "path": "^0.12.7"
   }
 }
