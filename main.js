@@ -6,7 +6,7 @@ let mainWindow;
 
 function createWindow() {
 
-    mainWindow = new BrowserWindow({width: 800, height: 600, icon: 'public/images/fav-icon.jpg', show: false});
+    mainWindow = new BrowserWindow({width: 1280, height: 720, icon: 'src/images/fav-icon.jpg', show: false});
 
     let indexPath;
     indexPath = url.format({

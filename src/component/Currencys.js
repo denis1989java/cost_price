@@ -9,6 +9,8 @@ let URL_GET_CURRENCYS="https://openexchangerates.org/api/latest.json?app_id=";
 let URL_GET_CURRENCYS_NAMES="https://openexchangerates.org/api/currencies.json";
 
 let currencies={};
+let currenciesNames={};
+
 
 async function getCurrencys() {
     await request.get(URL_GET_CURRENCYS+DEVELOPER_USER_ID)
@@ -25,9 +27,9 @@ async function getCurrencysNames() {
         .set('Content-Type', 'application/json;charset=UTF-8')
         .use(superagentCacheNames)
         .then(async res => {
-            currencies=res.body;
+            currenciesNames=res.body;
         });
-    return currencies;
+    return currenciesNames;
 }
 
 const Currencys = {

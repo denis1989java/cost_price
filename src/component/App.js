@@ -6,63 +6,92 @@ import '../assets/css/App.css';
 import loadJsonFile from "load-json-file";
 
 class App extends React.Component {
-   constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             view: "main",
-            user:{}
+            user: {}
         };
-       this.getUser = this.getUser.bind(this);
+        this.getUser = this.getUser.bind(this);
 
 
-   }
+    }
 
     componentDidMount() {
         this.getUser();
     }
 
     getUser() {
-        let path="src/userInfo/userInfo.json";
+        let path = "src/userInfo/userInfo.json";
         loadJsonFile(path).then(res => {
-            let user=res.user;
-            this.setState({user:user})
-        }).catch(()=>{
+            let user = res.user;
+            this.setState({user: user})
+        }).catch(() => {
             console.log("user don't exist")
         });
     }
 
 
     render() {
-       let view=this.state.view;
+        let view = this.state.view;
         return (
             <div className="mainScreen">
                 <h1>Cost Price Counting</h1>
+
                 {
-                    this.state.user.currency ?     <p>Welcome&nbsp;{this.state.user.name}&nbsp;{this.state.user.surname}&nbsp;Default currency:&nbsp;{this.state.user.currencyName}</p> :
-                        <p>Welcome!</p>
+                    view === 'main' && this.state.user.currency &&
+                    <h4>Welcome,&nbsp;{this.state.user.name}&nbsp;{this.state.user.surname}&nbsp;</h4>
                 }
+                {/* <div className="panel-group">
+                    <div className="panel panel-success">
+                        <div className="panel-heading">
+
+
+                        </div>
+                    </div>
+                </div>*/}
                 {
-                    view==='main' &&  <div>
+                    view === 'main' && <div>
                         {
-                            this.state.user.currency ? <button onClick={()=>this.setState({view:"fillSettings"})}>Update settings</button>:
-                                <button onClick={()=>this.setState({view:"fillSettings"})}>Fill settings</button>
+                            view === 'main' && this.state.user.currency &&
+                            <div className="app_buttons">
+                                <button type="button" className="btn btn-primary btn-block"
+                                        onClick={() => this.setState({view: "fillSettings"})}>Update profile
+                                </button>
+                                <button onClick={() => this.setState({view: "addGood"})} type="button"
+                                        className="btn btn-primary btn-block">Add good
+                                </button>
+                                <button onClick={() => this.setState({view: "countCostPrice"})} type="button"
+                                        className="btn btn-primary btn-block">Count cost price
+                                </button>
+                            </div>
                         }
-                        <br/>
-                        <button onClick={()=>this.setState({view:"addGood"})}>Add good</button><br/>
-                        <button onClick={()=>this.setState({view:"countCostPrice"})}>Count cost price</button></div>
+                        {
+                            view === 'main' && !this.state.user.currency &&
+                            <div className="app_buttons">
+                                <button type="button" className="btn btn-primary btn-block"
+                                        onClick={() => this.setState({view: "fillSettings"})}>Fill profile
+                                </button>
+                            </div>
+                        }
+
+                    </div>
                 }
 
 
                 {
-                    view==='fillSettings' && <Settings user={this.state.user} back={()=>{this.setState({view:"main"});this.getUser()}}/>
+                    view === 'fillSettings' && <Settings user={this.state.user} back={() => {
+                        this.setState({view: "main"});
+                        this.getUser()
+                    }}/>
                 }
 
                 {
-                    view==='addGood' && <AddGood user={this.state.user} back={()=>this.setState({view:"main"})}/>
+                    view === 'addGood' && <AddGood user={this.state.user} back={() => this.setState({view: "main"})}/>
                 }
 
                 {
-                    view==='countCostPrice' &&  <CountCostPrice back={()=>this.setState({view:"main"})}/>
+                    view === 'countCostPrice' && <CountCostPrice user={this.state.user} back={() => this.setState({view: "main"})}/>
                 }
             </div>
         );
