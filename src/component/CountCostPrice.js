@@ -1,5 +1,5 @@
 import React from "react";
-import '../assets/css/App.css';
+import '../assets/css/countCost.css';
 import loadJsonFile from "load-json-file";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import 'react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -19,6 +19,7 @@ class CountCostPrice extends React.Component {
         this.getGoods = this.getGoods.bind(this);
         this.onAfterSaveCell = this.onAfterSaveCell.bind(this);
         this.jobNameValidator = this.jobNameValidator.bind(this);
+        this.getMeasurings = this.getMeasurings.bind(this);
     }
 
     componentDidMount() {
@@ -34,7 +35,7 @@ class CountCostPrice extends React.Component {
             }
             summ = summ + price;
         })
-        this.setState({summ: summ + ''});
+        this.setState({summ:  parseFloat(summ).toFixed(2)  + ''});
     }
 
     getGoods() {
@@ -46,7 +47,9 @@ class CountCostPrice extends React.Component {
         });
     }
 
-
+    getMeasurings(cell, row) {
+        return cell.measurings;
+    }
 
     jobNameValidator(value) {
         const response = {isValid: true, notification: {type: 'success', msg: '', title: ''}};
@@ -58,6 +61,10 @@ class CountCostPrice extends React.Component {
             response.notification.title = 'Invalid Value';
         }
         return response;
+    }
+
+    rowStyleFormat(row, rowIdx) {
+        return {backgroundColor: rowIdx % 2 === 0 ? '#dff0d8' : 'white', color: '#3c763d'};
     }
 
     render() {
@@ -78,18 +85,18 @@ class CountCostPrice extends React.Component {
             goodsArray.push(this.state.goods[good])
         });
         return (
-            <div>
-                <button onClick={this.props.back}>Back</button>
-                <h1>Count Cost Price</h1>
-                <button onClick={this.onAfterSaveCell}>Count</button>
+            <div className="countCost">
+                <i onClick={this.props.back} className="fa fa-chevron-circle-left backButton"/>
+                <form className="form-horizontal">
                 {
                     Object.keys(goodsArray).length > 0 &&
 
                     <BootstrapTable
                         ref='table'
                         data={goodsArray}
-                        striped={true}
                         hover={true}
+                        trStyle={this.rowStyleFormat}
+                        headerContainerClass="headerContainerClass"
                         cellEdit={cellEditProp}
                         selectRow={selectRowProp}
                     >
@@ -100,14 +107,23 @@ class CountCostPrice extends React.Component {
                         }}>Quantity</TableHeaderColumn>
                         <TableHeaderColumn dataField='measuring' editable={{
                             type: 'select',
-                            options: {values: MEASURINGS}
+                            options: {values: this.getMeasurings}
                         }}>Measuring</TableHeaderColumn>
                     </BootstrapTable>
                 }
+                    <div className="form-group">
+                        <label className="col-sm-6"></label>
+                        <div className="col-sm-3">
+                                <button onClick={this.onAfterSaveCell} type="button"
+                                        className="btn btn-primary btn-block countResult">Count
+                                </button>
+                        </div>
+                        <div className="col-sm-3">
+                            <input className="form-control countResult" readOnly={true} value={ 'Cost price: '+this.props.user.currency+' ' +this.state.summ} type="text" />
+                        </div>
 
-                <p>Cost price: {this.state.summ}</p>
-
-
+                    </div>
+                </form>
             </div>
         );
     }

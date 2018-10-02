@@ -3,6 +3,12 @@
 .mainScreen {
   text-align: center;
 }
-.tableHeight{
-  height: 200px;
+.mainScreen>h1, .mainScreen>h4{
+  font-family: Comic Sans MS;
+  font-style: italic;
+  color: #3c763d;
 }
+.mainScreen>h4{
+  margin-top: 100px;
+}
+

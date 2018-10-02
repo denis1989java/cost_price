@@ -2,6 +2,7 @@ import React from "react";
 import '../assets/css/App.css';
 import Currencys from "./Currencys";
 import loadJsonFile from "load-json-file";
+import '../assets/css/addGood.css';
 
 import writeJsonFile from "write-json-file";
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
@@ -20,13 +21,15 @@ class AddGood extends React.Component {
             price: "",
             currency: "BYN",
             currencysNames: {},
-            currencys:{},
-            goods: {}
+            currencys: {},
+            goods: {},
+            errorKind: ""
         };
         this.getCurrencysNames = this.getCurrencysNames.bind(this);
         this.getCurrencys = this.getCurrencys.bind(this);
         this.save = this.save.bind(this);
         this.getGoods = this.getGoods.bind(this);
+        this.rowStyleFormat = this.rowStyleFormat.bind(this);
     }
 
     componentDidMount() {
@@ -77,104 +80,182 @@ class AddGood extends React.Component {
 
     save() {
         if (this.state.name === "" || this.state.quantity === "" || this.state.measuring === "" || this.state.price === "" || this.state.currency === "") {
-            this.setState({error: "Please, fill all fields"});
+            this.setState({error: "Please, fill all fields", errorKind: "error"});
         } else {
             let good = {};
             let price;
-            let quantity=parseInt(this.state.quantity);
-            let measuring=this.state.measuring;
-            let defaultCurrency=this.props.user.currency;
-            if(this.state.measuring==="Kg" || this.state.measuring==="L"){
-                quantity=parseInt(this.state.quantity)*1000
-                if(this.state.measuring==="L"){
-                    measuring="Ml";
+            let quantity = parseInt(this.state.quantity);
+            let measuring = this.state.measuring;
+            let measurings=[];
+            let defaultCurrency = this.props.user.currency;
+            if (this.state.measuring === "Kg" || this.state.measuring === "L") {
+                quantity = parseInt(this.state.quantity) * 1000
+                if (this.state.measuring === "L") {
+                    measuring = "Ml";
                 }
-                if(this.state.measuring==="Kg"){
-                    measuring="Gr"
+                if (this.state.measuring === "Kg") {
+                    measuring = "Gr"
                 }
             }
-            price=parseFloat(this.state.price)/quantity;
-            if(this.state.currency==="USD"){
-                price=price*parseFloat(this.state.currencys[defaultCurrency]);
+            if (this.state.measuring === "L" || this.state.measuring === "Ml") {
+                measurings.push("Ml");
+                measurings.push("L");
+            }else if(this.state.measuring === "Kg" || this.state.measuring === "Gr"){
+                measurings.push("Kg");
+                measurings.push("Gr");
             }
-            if(this.state.currency!=="USD" && this.state.currency!==defaultCurrency){
+            price = parseFloat(this.state.price) / quantity;
+            if (this.state.currency === "USD") {
+                price = price * parseFloat(this.state.currencys[defaultCurrency]);
+            }
+            if (this.state.currency !== "USD" && this.state.currency !== defaultCurrency) {
 
-                price=price/parseFloat(this.state.currencys[this.state.currency])*parseFloat(this.state.currencys[defaultCurrency]);
+                price = price / parseFloat(this.state.currencys[this.state.currency]) * parseFloat(this.state.currencys[defaultCurrency]);
             }
             good.name = this.state.name;
             good.quantity = 0;
             good.measuring = this.state.measuring;
             good.price = this.state.price;
             good.currency = this.state.currency;
-            good.count_measuring=measuring;
-            good.count_price=price;
-            good.pri
+            good.count_measuring = measuring;
+            good.count_price = price;
+            good.measurings = measurings;
             let goods = this.state.goods;
             if (goods) {
                 goods[good.name] = good;
             }
             (async () => {
                 await writeJsonFile("src/goods/goods.json", {"goods": goods});
-                this.setState({error: "Information updated",
+                this.setState({
+                    error: "Information updated",
                     goods: goods,
-                    name:"",
-                    quantity:"",
-                    price:"",
-                    currency:"BYN"
+                    name: "",
+                    quantity: "",
+                    price: "",
+                    currency: "BYN", errorKind: "success"
                 })
             })();
         }
     }
 
+    rowStyleFormat(row, rowIdx) {
+        return {backgroundColor: rowIdx % 2 === 0 ? '#dff0d8' : 'white', color: '#3c763d'};
+    }
+
     render() {
-        let measurings = MEASURINGS.map(measuring => {
-            return <option value={measuring}>{measuring}</option>
-        });
-        let currencysNames = Object.keys(this.state.currencysNames).map(currency => {
-            if (currency !== this.state.currency) {
-                return <option value={currency}>{this.state.currencysNames[currency]}</option>
-            }
-        });
         let goodsArray = [];
         Object.keys(this.state.goods).map(good => {
-            goodsArray.push(this.state.goods[good])
+            goodsArray.push(this.state.goods[good]);
         });
         return (
-            <div>
-                <button onClick={this.props.back}>Back</button>
-                <h1>Add Good</h1>
-                <h1>{this.state.error}</h1>
-                <input required={true} type="text" value={this.state.name} placeholder="name"
-                       onChange={e => this.setState({name: e.target.value})}/>
-                <input required={true} type="number" value={this.state.quantity} placeholder="quantity"
-                       onChange={e => this.setState({quantity: e.target.value})}/>
-                <select required={true}
-                        onChange={e => this.setState({measuring: e.target.value})}>
-                    <option></option>
-                    {measurings}
-                </select>
-                <input required={true} type="number" value={this.state.price} placeholder="price"
-                       onChange={e => this.setState({price: e.target.value})}/>
-                <select required={true}
-                        onChange={e => this.setState({currency: e.target.value})}>
-                    <option value={this.state.currency}>{this.state.currencysNames[this.state.currency]}</option>
-                    <br/>
-                    {currencysNames}
-                </select>
-                <button onClick={this.save}>Save</button>
-                {
-                    Object.keys(goodsArray).length > 0 &&
-                    <BootstrapTable containerClass="tableHeight"
-                        data={goodsArray}
-                        striped={true}
-                        hover={true}
-                        condensed={true}
-                        search={true}
-                    >
-                        <TableHeaderColumn isKey={true} dataSort={true} dataField='name'>Name</TableHeaderColumn>
-                    </BootstrapTable>
-                }
+            <div className="addGoodDiv">
+                <i onClick={this.props.back} className="fa fa-chevron-circle-left backButton"/>
+                <form className="form-horizontal">
+                    <h2>Add Good</h2>
+                    <div className="container">
+                        <div className="col-sm-7">
+                            {
+                                this.state.error && this.state.errorKind === "success" &&
+                                <div className="form-group">
+                                    <label className="col-sm-3"></label>
+                                    <div className="col-sm-9">
+                                        <div className="alert alert-success">
+                                            {this.state.error}
+                                        </div>
+                                    </div>
 
+                                </div>
+                            }
+                            {
+                                this.state.error && this.state.errorKind === "error" &&
+                                <div className="form-group">
+                                    <label className="col-sm-3"></label>
+                                    <div className="col-sm-9">
+                                        <div className="alert alert-danger">
+                                            {this.state.error}
+                                        </div>
+                                    </div>
+
+                                </div>
+                            }
+                            <div className="form-group">
+                                <label className="col-sm-3 control-label">Name:</label>
+                                <div className="col-sm-9">
+                                    <input className="form-control" required={true} value={this.state.name}
+                                           placeholder="Name"
+                                           type="text" onChange={e => this.setState({name: e.target.value})}/>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label className="col-sm-3 control-label">Quantity:</label>
+                                <div className="col-sm-9">
+                                    <input className="form-control" required={true} value={this.state.quantity}
+                                           placeholder="Quantity"
+                                           type="number" onChange={e => this.setState({quantity: e.target.value})}/>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label className="col-sm-3 control-label">Measuring:</label>
+                                <div className="col-sm-9">
+                                    <select className="form-control" required={true}
+                                            onChange={e => this.setState({measuring: e.target.value})} value={this.state.measuring}>
+                                        <option></option>
+                                        {
+                                            MEASURINGS.map((measuring)=>{
+                                                return <option value={measuring}>{measuring}</option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="col-sm-3 control-label">Price:</label>
+                                <div className="col-sm-9">
+                                    <input className="form-control" required={true} value={this.state.price}
+                                           placeholder="Price"
+                                           type="number" onChange={e => this.setState({price: e.target.value})}/>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label className="col-sm-3 control-label">Currency:</label>
+                                <div className="col-sm-9">
+                                    <select className="form-control" required={true}
+                                            onChange={e => this.setState({currency: e.target.value})}  value={this.state.currency}>
+                                        <option></option>
+                                        {
+                                            Object.keys(this.state.currencysNames).map((currencyName)=>{
+                                                return <option value={currencyName}>{this.state.currencysNames[currencyName]}</option>
+                                            })
+                                        }
+                                        </select>
+                                </div>
+                            </div>
+                            <div className="form-group">
+                                <label className="col-sm-3"></label>
+                                <div className="col-sm-9">
+                                    <button onClick={this.save} type="button"
+                                            className="btn btn-primary btn-block">Save
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-5">
+                            {
+                                Object.keys(goodsArray).length > 0 &&
+
+                                <BootstrapTable trStyle={this.rowStyleFormat}
+                                                headerContainerClass="headerContainerClass"
+                                                data={goodsArray}
+                                                hover={true}
+                                >
+                                    <TableHeaderColumn isKey={true} dataSort={true}
+                                                       dataField='name'>Name</TableHeaderColumn>
+                                </BootstrapTable>
+                            }
+                        </div>
+                    </div>
+                </form>
             </div>
         );
     }
