@@ -6,17 +6,17 @@
     top:40px;
     cursor: pointer;
 }
-.countCost button,.countCost button:focus,.countCost button:active{
+.countCost button,.countCost button:focus,.countCost button:active, .modal-open button,.modal-open button:focus,.modal-open button:active{
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
 }
-.countCost button:hover{
+.countCost button:hover ,.modal-open button:hover{
     color: white;
     background-color: #3c763d;
     border-color: #d6e9c6;
 }
-.countCost input{
+.countCost input, .countCost select{
     color: #3c763d;
     background-color: #dff0d8;
     border-color: #d6e9c6;
@@ -24,10 +24,43 @@
 .countCost  .row{
     text-align: left;
 }
-.countCost .countResult{
+.countCost .countResult {
     margin-top: 15px;
 }
+
 .countResult:last-of-type{
     text-align: center;
+}
+.modal-backdrop.in{
+    height: 100%;
+}
+.dishNameInput{
+    margin-top: 15px;
+}
+.modal-title{
+    font-family: Comic Sans MS;
+    font-style: italic;
+    color: #3c763d;
+}
+.countCost .no-padding{
+    padding-left: 0;
+    padding-right: 0;
+}
+.countCost .btn.btn-primary.react-bs-table-show-sel-only-btn{
+    padding: 7px 12px;
+}
+
+.countCost .row .col-xs-6.col-sm-6.col-md-6.col-lg-8{
+    max-width: 50%;
+}
+
+.countCost .col-sm-5.control-label.no-padding{
+    max-width: 130px;
+}
+
+@media only screen and (max-width: 768px) {
+    .countCost .btn.btn-primary.react-bs-table-show-sel-only-btn{
+        margin-top: 5px;
+    }
 }
 

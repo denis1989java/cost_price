@@ -12,10 +12,10 @@ class Settings extends React.Component {
             name: "",
             surname: "",
             currency: "BYN",
-            error: "",
-            errorKind:"",
             user: props.user
         };
+        this.error=this.props.error;
+        this.success=this.props.success;
         this.getCurrencys = this.getCurrencys.bind(this);
         this.save = this.save.bind(this);
     }
@@ -49,7 +49,7 @@ class Settings extends React.Component {
 
     save() {
         if (this.state.name === "" || this.state.surname === "" || this.state.currency === "") {
-            this.setState({error: "Please, fill all fields",errorKind:"error"});
+            this.error("Please, fill all fields");
         } else {
             let userInfo = {};
             userInfo.name = this.state.name;
@@ -58,8 +58,8 @@ class Settings extends React.Component {
             userInfo.currencyName = this.state.currencys[this.state.currency];
             (async () => {
                 await writeJsonFile("src/userInfo/userInfo.json", {"user": userInfo});
-                this.setState({error: "Information updated", user: userInfo,errorKind:"success"})
-
+                this.setState({user: userInfo});
+                this.success("Information updated");
             })();
         }
     }
@@ -75,31 +75,6 @@ class Settings extends React.Component {
                 <i onClick={this.props.back} className="fa fa-chevron-circle-left backButton"/>
                 <form className="form-horizontal">
                     <h2>Profile</h2>
-                    {
-                        this.state.error && this.state.errorKind==="success" &&
-                        <div className="form-group">
-                            <label className="col-sm-4"></label>
-                            <div className="col-sm-4">
-                                <div className="alert alert-success">
-                                    {this.state.error}
-                                </div>
-                            </div>
-
-                        </div>
-                    }
-                    {
-                        this.state.error && this.state.errorKind==="error" &&
-                        <div className="form-group">
-                            <label className="col-sm-4"></label>
-                            <div className="col-sm-4">
-                                <div className="alert alert-danger">
-                                    {this.state.error}
-                                </div>
-                            </div>
-
-                        </div>
-                    }
-
                     <div className="form-group">
                         <label className="col-sm-4 control-label">Name:</label>
                         <div className="col-sm-4">

@@ -18,12 +18,14 @@
   "author": "Dzianis Monich",
   "license": "UNLICENSED",
   "dependencies": {
+    "ajv": "^6.0.0",
     "cache-service-cache-module": "^2.0.0",
     "load-json-file": "^5.1.0",
     "react": "16.5.2",
     "react-bootstrap": "^0.32.4",
     "react-bootstrap-table": "^4.3.1",
     "react-dom": "16.5.2",
+    "react-s-alert": "^1.4.1",
     "superagent": "^4.0.0-beta.5",
     "superagent-cache-plugin": "^2.0.0",
     "write-json-file": "^3.0.2"

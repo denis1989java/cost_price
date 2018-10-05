@@ -14,7 +14,6 @@ class AddGood extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: "",
             name: "",
             quantity: "",
             measuring: "Kg",
@@ -23,8 +22,9 @@ class AddGood extends React.Component {
             currencysNames: {},
             currencys: {},
             goods: {},
-            errorKind: ""
         };
+        this.error=this.props.error;
+        this.success=this.props.success;
         this.getCurrencysNames = this.getCurrencysNames.bind(this);
         this.getCurrencys = this.getCurrencys.bind(this);
         this.save = this.save.bind(this);
@@ -42,8 +42,7 @@ class AddGood extends React.Component {
         let path = "src/goods/goods.json";
         loadJsonFile(path).then(res => {
             this.setState({goods: res.goods})
-        }).catch((err) => {
-            console.log(err)
+        }).catch(() => {
             console.log("goods don't exist")
         });
     }
@@ -80,7 +79,7 @@ class AddGood extends React.Component {
 
     save() {
         if (this.state.name === "" || this.state.quantity === "" || this.state.measuring === "" || this.state.price === "" || this.state.currency === "") {
-            this.setState({error: "Please, fill all fields", errorKind: "error"});
+            this.error( "Please, fill all fields");
         } else {
             let good = {};
             let price;
@@ -126,13 +125,13 @@ class AddGood extends React.Component {
             }
             (async () => {
                 await writeJsonFile("src/goods/goods.json", {"goods": goods});
+                this.success("Good added");
                 this.setState({
-                    error: "Information updated",
                     goods: goods,
                     name: "",
                     quantity: "",
                     price: "",
-                    currency: "BYN", errorKind: "success"
+                    currency: "BYN"
                 })
             })();
         }
@@ -154,30 +153,6 @@ class AddGood extends React.Component {
                     <h2>Add Good</h2>
                     <div className="container">
                         <div className="col-sm-7">
-                            {
-                                this.state.error && this.state.errorKind === "success" &&
-                                <div className="form-group">
-                                    <label className="col-sm-3"></label>
-                                    <div className="col-sm-9">
-                                        <div className="alert alert-success">
-                                            {this.state.error}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            }
-                            {
-                                this.state.error && this.state.errorKind === "error" &&
-                                <div className="form-group">
-                                    <label className="col-sm-3"></label>
-                                    <div className="col-sm-9">
-                                        <div className="alert alert-danger">
-                                            {this.state.error}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            }
                             <div className="form-group">
                                 <label className="col-sm-3 control-label">Name:</label>
                                 <div className="col-sm-9">

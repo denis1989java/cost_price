@@ -48,3 +48,9 @@ label{
 .alert.alert-danger{
     margin-bottom: 0;
 }
+
+@media only screen and (max-width: 768px) {
+    .currencyName{
+        text-align: center;
+    }
+}

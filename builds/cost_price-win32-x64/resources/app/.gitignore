@@ -1,0 +1,11 @@
+node_modules
+
+.idea
+
+package-lock.json
+
+dist
+
+src/goods
+
+src/userInfo
