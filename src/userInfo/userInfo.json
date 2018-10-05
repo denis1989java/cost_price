@@ -1,5 +1,8 @@
 {
 	"user": {
-
+		"name": "Denis",
+		"surname": "Monich",
+		"currency": "BYN",
+		"currencyName": "Belarusian Ruble"
 	}
 }

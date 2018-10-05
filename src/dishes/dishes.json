@@ -1,5 +1,32 @@
 {
 	"dishes": {
-
+		"soup": [
+			{
+				"name": "potatos",
+				"quantity": "43",
+				"measuring": "Kg",
+				"price": "123",
+				"currency": "BYN",
+				"count_measuring": "Gr",
+				"count_price": 0.01025,
+				"measurings": [
+					"Kg",
+					"Gr"
+				]
+			},
+			{
+				"name": "carrot",
+				"quantity": "23",
+				"measuring": "Kg",
+				"price": "12",
+				"currency": "BYN",
+				"count_measuring": "Gr",
+				"count_price": 0.012,
+				"measurings": [
+					"Kg",
+					"Gr"
+				]
+			}
+		]
 	}
 }

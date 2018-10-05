@@ -1,5 +1,30 @@
 {
 	"goods": {
-
+		"potatos": {
+			"name": "potatos",
+			"quantity": 0,
+			"measuring": "Kg",
+			"price": "123",
+			"currency": "BYN",
+			"count_measuring": "Gr",
+			"count_price": 0.01025,
+			"measurings": [
+				"Kg",
+				"Gr"
+			]
+		},
+		"carrot": {
+			"name": "carrot",
+			"quantity": 0,
+			"measuring": "Kg",
+			"price": "12",
+			"currency": "BYN",
+			"count_measuring": "Gr",
+			"count_price": 0.012,
+			"measurings": [
+				"Kg",
+				"Gr"
+			]
+		}
 	}
 }
