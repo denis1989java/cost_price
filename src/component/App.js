@@ -4,6 +4,9 @@ import Settings from "./Settings";
 import CountCostPrice from "./CountCostPrice";
 import '../assets/css/App.css';
 import loadJsonFile from "load-json-file";
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/genie.css';
 
 class App extends React.Component {
     constructor(props) {
@@ -13,19 +16,32 @@ class App extends React.Component {
             user: {}
         };
         this.getUser = this.getUser.bind(this);
-
-
+        this.errorHandler = this.errorHandler.bind(this);
+        this.successHandler = this.successHandler.bind(this);
     }
 
     componentDidMount() {
         this.getUser();
     }
 
+    errorHandler(message){
+        Alert.error(message, {
+            position: 'top-left',
+            effect: 'genie'
+        });
+    }
+
+    successHandler(message){
+        Alert.success(message, {
+            position: 'top-left',
+            effect: 'genie'
+        });
+    }
+
     getUser() {
         let path = "src/userInfo/userInfo.json";
         loadJsonFile(path).then(res => {
-            let user = res.user;
-            this.setState({user: user})
+            this.setState({user: res.user})
         }).catch(() => {
             console.log("user don't exist")
         });
@@ -36,20 +52,13 @@ class App extends React.Component {
         let view = this.state.view;
         return (
             <div className="mainScreen">
+                <Alert stack={{limit: 1}}  timeout={2000}/>
                 <h1>Cost Price Counting</h1>
 
                 {
                     view === 'main' && this.state.user.currency &&
                     <h4>Welcome,&nbsp;{this.state.user.name}&nbsp;{this.state.user.surname}&nbsp;</h4>
                 }
-                {/* <div className="panel-group">
-                    <div className="panel panel-success">
-                        <div className="panel-heading">
-
-
-                        </div>
-                    </div>
-                </div>*/}
                 {
                     view === 'main' && <div>
                         {
@@ -80,18 +89,18 @@ class App extends React.Component {
 
 
                 {
-                    view === 'fillSettings' && <Settings user={this.state.user} back={() => {
+                    view === 'fillSettings' && <Settings error={this.errorHandler} success={this.successHandler} user={this.state.user} back={() => {
                         this.setState({view: "main"});
                         this.getUser()
                     }}/>
                 }
 
                 {
-                    view === 'addGood' && <AddGood user={this.state.user} back={() => this.setState({view: "main"})}/>
+                    view === 'addGood' && <AddGood error={this.errorHandler} success={this.successHandler} user={this.state.user} back={() => this.setState({view: "main"})}/>
                 }
 
                 {
-                    view === 'countCostPrice' && <CountCostPrice user={this.state.user} back={() => this.setState({view: "main"})}/>
+                    view === 'countCostPrice' && <CountCostPrice error={this.errorHandler} success={this.successHandler} user={this.state.user} back={() => this.setState({view: "main"})}/>
                 }
             </div>
         );

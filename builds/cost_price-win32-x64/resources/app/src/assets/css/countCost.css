@@ -1,0 +1,33 @@
+.countCost .backButton {
+    color: #3c763d;
+    font-size:40px;
+    position: absolute;
+    right: 40px;
+    top:40px;
+    cursor: pointer;
+}
+.countCost button,.countCost button:focus,.countCost button:active{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.countCost button:hover{
+    color: white;
+    background-color: #3c763d;
+    border-color: #d6e9c6;
+}
+.countCost input{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.countCost  .row{
+    text-align: left;
+}
+.countCost .countResult{
+    margin-top: 15px;
+}
+.countResult:last-of-type{
+    text-align: center;
+}
+

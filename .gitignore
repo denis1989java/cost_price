@@ -6,6 +6,4 @@ package-lock.json
 
 dist
 
-src/goods
-
-src/userInfo
+builds
